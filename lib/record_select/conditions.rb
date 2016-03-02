@@ -29,7 +29,7 @@ module RecordSelect
     end
 
     # define special list of selected fields,
-    # mainly to define extra fields that can be used for 
+    # mainly to define extra fields that can be used for
     # specialized sorting.
     def record_select_select
     end
@@ -47,12 +47,12 @@ module RecordSelect
         build_record_select_conditions(tokens, record_select_like_operator, search_pattern)
       end
     end
-    
+
     def build_record_select_conditions(tokens, operator, search_pattern)
-      where_clauses = record_select_config.search_on.collect { |sql| "#{sql} #{operator} ?" }
+      where_clauses = record_select_config.search_on.collect { |sql| "#{sql}::TEXT #{operator} ?" }
       phrase = "(#{where_clauses.join(' OR ')})"
       sql = ([phrase] * tokens.length).join(' AND ')
-      
+
       tokens = tokens.collect { |token| [search_pattern.sub('?', token)] * record_select_config.search_on.length }.flatten
       [sql, *tokens]
     end
