@@ -1,8 +1,11 @@
 <%
 controller ||= params[:controller]
 
-permit_fields = [:search] + (permit_rs_browse_params || [])
-pagination_url_params = params.permit(*permit_fields).merge(:controller => controller, :action => :browse, :search => params[:search], :update => 1)
+permit_fields = [:search, :page, :update, :utf8] + (permit_rs_browse_params || [])
+pagination_url_params = params.
+  permit(*permit_fields).
+  merge(:controller => controller, :action => :browse, :search => params[:search], :update => 1).
+  to_unsafe_h
 prev_url = url_for(pagination_url_params.merge(:page => page.prev.number)) if page.prev?
 next_url = url_for(pagination_url_params.merge(:page => page.next.number)) if page.next?
 -%>
